@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { UiService } from 'src/app/services/ui.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -6,16 +9,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  title: string = 'Practice';
+  title: string = 'CRUD';
+  showAddTask: boolean = false;
+  subscription: Subscription;
 
-  // contructor. Usado quando se quer inicializar o codigo um vez.
-  constructor() { }
+  constructor(private uiService: UiService, private router: Router) {
+    this.subscription = this.uiService
+      .onToggle()
+      .subscribe((value) => (this.showAddTask = value));
+  }
 
-  // lifecycle. Usado quando se quer incializar algum codigo varias vezes.
   ngOnInit(): void {}
   
-  toggleAndTask() {
-    console.log('toggle')
+  toggleAddTask() {
+    this.uiService.toggleAddTask();
+  }
+
+  hasRoute(route: string) {
+    return this.router.url === route;
   }
 
 }
